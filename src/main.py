@@ -5,9 +5,9 @@ from datetime import datetime
 
 from data import DataLoader
 from model import ModelBuilder
+from predict import ModelPredictor
 
 from settings import TRACKING_URI
-
 mlflow.set_tracking_uri(TRACKING_URI)
 
 
@@ -23,13 +23,14 @@ def main():
     experiment_name = "Cat_breeds_identification_train"
     mlflow.set_experiment(experiment_name)
     with mlflow.start_run(run_name=datetime.now().strftime("%Y-%m-%d %H:%M")):
-        train, test = DataLoader().load_data()
+        train, test = DataLoader().get_data()
         ModelBuilder(train, test).train()
 
     # elif args.predict:
     # experiment_name = "Cat_breeds_identification_predict"
     # mlflow.set_experiment(experiment_name)
-    # ModelPredictor(data_type).predict_all_models()
+    # ModelPredictor().predict()
+
     # else:
     #   parser.print_help()
 
