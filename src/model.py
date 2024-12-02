@@ -1,5 +1,6 @@
 import pandas as pd
 import tensorflow as tf
+from loguru import logger
 from tensorflow.keras import optimizers, Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dropout, Flatten, Dense
 
@@ -17,8 +18,8 @@ class ModelBuilder:
 
     def train(self) -> tf.keras.Model:
         model = self.model_architecture()
-        history = model.fit(self.train_ds, epochs=EPOCHS) #validation_split=0.2
-        #self.save_model(model)
+        model.fit(self.train_ds, epochs=EPOCHS)
+        # self.save_model(model)
         return model
 
     def model_architecture(self) -> tf.keras.Model:
@@ -35,8 +36,6 @@ class ModelBuilder:
         model.add(MaxPooling2D((2, 2)))
         model.add(Conv2D(896, (3, 3), activation="relu"))
         model.add(MaxPooling2D((2, 2)))
-        # model.add(Conv2D(1792, (3,3), activation='relu'))
-        # model.add(MaxPooling2D((2,2)))
         model.add(Flatten())
         model.add(Dense(30, activation="relu"))
         model.add(Dropout(0.5))
@@ -47,7 +46,6 @@ class ModelBuilder:
             optimizer=optimizers.Adam(learning_rate=0.0001),
             metrics=["accuracy"],
         )
-        model.summary()
         return model
 
     def save_model(self, model: tf.keras.Model):
