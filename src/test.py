@@ -24,8 +24,11 @@ class ModelTester:
         model: tf.keras.Model,
     ):
         self.test_dataset = test
+        logger.info(f"self.test_dataset: {self.test_dataset}")
         self.model = model
+        logger.info(f"self.model: {self.model}")
         self.y_test_prob = y_test
+        logger.info(f"self.y_test_prob: {self.y_test_prob}")
 
     def test(self):
         logger.info("Start testing")
@@ -37,22 +40,23 @@ class ModelTester:
         logger.info(f"y_pred: {y_pred}")
         logger.info(f"y_test: {y_test}")
 
-        # self.cm, self.rec, self.pr, self.acc = self.model_evaluate(y_test, y_pred)
-        # self.log_metrics(model_name)
-        # self.log_graphics(y_test, y_pred_prob, model_name)
+        self.cm, self.rec, self.pr, self.acc = self.model_evaluate(y_test, y_pred)
+        self.log_metrics()
+        # self.log_graphics(y_test, y_pred_prob)
         logger.info("Finish testing")
 
     def model_evaluate(self, y_test: np.ndarray, y_pred: np.ndarray):
         cm = confusion_matrix(y_test, y_pred)
-        rec = recall_score(y_test, y_pred)
-        pr = precision_score(y_test, y_pred)
+        rec = recall_score(y_test, y_pred, average="weighted")
+        pr = precision_score(y_test, y_pred, average="weighted")
         acc = accuracy_score(y_test, y_pred)
         return cm, rec, pr, acc
 
-    def log_metrics(self, model_name: str):
-        logger.info(f"{model_name} accuracy:{self.acc}")
-        logger.info(f"{model_name} precision:{self.pr}")
-        logger.info(f"{model_name} recall:{self.rec}")
+    def log_metrics(self):
+        logger.info(f"confusion matrix:{self.cm}")
+        logger.info(f"accuracy:{self.acc}")
+        logger.info(f"precision:{self.pr}")
+        logger.info(f"recall:{self.rec}")
 
     def log_graphics(
         self,
